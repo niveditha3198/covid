@@ -25,6 +25,7 @@ function updateValue(e) {
     state.state_name.toLowerCase().startsWith(e.target.value.toLowerCase())
   );
   console.log(matchingStates);
+  searchResultsWrapper.innerHTML = '';
   matchingStates.forEach(({ state_id: stateId, state_name: stateName }) => {
     const searchResult = document.createElement("div");
     searchResult.className = "search-result";
@@ -43,6 +44,8 @@ async function getDistrictNames(stateId) {
   const districtsAPIResponse = await fetch(DIS_URL + `/${stateId}`);
   window.districtNames = await districtsAPIResponse.json();
   console.log(districtNames);
+  districtSelect.innerHTML ='';
+
   districtNames.districts.forEach(
     ({ district_id: districtId, district_name: districtName }) => {
       const dropDownResult = document.createElement("option");
@@ -71,27 +74,68 @@ async function getSessionsByDistricId(districtId) {
   );
   window.sessionsAvailable = await sessionApiResponse.json();
   console.log(sessionsAvailable);
+
+ sessionDetails.innerHTML='';
   sessionsAvailable.sessions.forEach(
+    
     ({
       address: location,
-      // available_capacity_dose1: dose1Availability
-      // available_capacity_dose2: dose2Availability,
-      // max_age_limit: maxAge,
-      // min_age_limit: minAge,
-      // name: locationName,
-      // slots: availableSlots,
-      // pincode: pinCode,
+      available_capacity_dose1: dose1Availability,
+      available_capacity_dose2: dose2Availability,
+      max_age_limit: maxAge,
+      min_age_limit: minAge,
+      name: locationName,
+      slots: availableSlots,
+      pincode: pinCode,
     }) => {
-      const sessionsDetail = document.createElement("p");
-      sessionsDetail.innerText = location;
-      // sessionsDetail.innerText = dose1Availability;
-      // (sessionsDetail.innerText = dose2Availability),
-      //   (sessionsDetail.innerText = maxAge);
-      // sessionsDetail.innerText = minAge;
-      // sessionsDetail.innerText = locationName;
-      // sessionsDetail.innerText = availableSlots;
-      // sessionsDetail.innerText = pinCode;
-      sessionDetails.appendChild(sessionsDetail);
+
+       const sessionInfo=
+      CreateSessionDetailsCard(location, dose1Availability, dose2Availability, maxAge, minAge, locationName, availableSlots, pinCode);
+      sessionDetails.appendChild(sessionInfo);
     }
+     
+
   );
+}
+
+const CreateSessionDetailsCard = (location, dose1Availability, dose2Availability, maxAge, minAge, locationName, availableSlots, pinCode) => {
+  const sessionDetailCard = document.createElement("div");
+
+  const sessionsDetailFragment = document.createDocumentFragment()
+  const locality = document.createElement("div");
+  locality.innerHTML = location;
+  sessionsDetailFragment.appendChild(locality);
+
+  const dose1 = document.createElement("div");
+  dose1.innerHTML = dose1Availability;
+  sessionsDetailFragment.appendChild(dose1);
+
+  const dose2 = document.createElement("div");
+  dose2.innerHTML = dose2Availability;
+  sessionsDetailFragment.appendChild(dose2);
+
+  const maximumAge = document.createElement("div");
+  maximumAge.innerHTML = maxAge;
+  sessionsDetailFragment.appendChild(maximumAge);
+
+  const minimumAge = document.createElement("div");
+  minimumAge.innerHTML = minAge;
+  sessionsDetailFragment.appendChild(minimumAge);
+
+  const localityName = document.createElement("div");
+  localityName.innerHTML = locationName;
+  sessionsDetailFragment.appendChild(localityName);
+
+  const slotAvailability = document.createElement("div");
+  slotAvailability.innerHTML = availableSlots;
+  sessionsDetailFragment.appendChild(slotAvailability);
+
+  const pincode = document.createElement("div");
+  pincode.innerHTML = pinCode;
+  sessionsDetailFragment.appendChild(pincode);
+
+  sessionDetailCard.appendChild(sessionsDetailFragment);
+  return sessionDetailCard;
+
+  // d `<span style="color: red;">${location}</span><span>${dose1Availability}</span><span>${dose2Availability}</span>`
 }
