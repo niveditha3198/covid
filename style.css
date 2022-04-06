@@ -1,0 +1,24 @@
+#form{
+    display: flex;
+    padding: 80px;
+    box-sizing: border-box;
+
+}
+/* .search-results-wrapper{
+    height: fit-content;
+} */
+section{
+    padding: 10px;
+}
+
+.search-result{
+    padding: 10px;
+    background-color: blanchedalmond;
+    color: blue;
+    cursor:pointer;
+    
+}
+#input{
+    border-radius: 0.5%;
+    box-shadow: inset;
+}
